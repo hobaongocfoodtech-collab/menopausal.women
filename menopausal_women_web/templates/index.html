@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Advisor 🌸</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-pink: #ff4081; --bg-gradient: linear-gradient(135deg, #fff5f8 0%, #fce4ec 100%); }
+        body { background: var(--bg-gradient); min-height: 100vh; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .card { border-radius: 25px; border: none; box-shadow: 0 15px 40px rgba(255,64,129,0.12); border-top: 8px solid var(--primary-pink); }
+        .step-header { display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px dashed #f8bbd0; }
+        .step-number { width: 40px; height: 40px; background: var(--primary-pink); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+        .form-label { font-weight: 600; color: #555; margin-bottom: 8px; font-size: 0.95rem; }
+        .form-select, .form-control { border-radius: 12px; border: 1.5px solid #eee; padding: 12px; }
+        .form-select:focus, .form-control:focus { border-color: var(--primary-pink); box-shadow: 0 0 0 0.25rem rgba(255,64,129,0.1); }
+        .btn-predict { background: var(--primary-pink); color: white; border-radius: 50px; padding: 15px 40px; font-weight: bold; font-size: 1.1rem; border: none; transition: 0.3s; }
+        .btn-predict:hover { transform: scale(1.05); background: #f50057; color: white; box-shadow: 0 10px 20px rgba(245,0,87,0.3); }
+        .instruction { font-size: 0.85rem; color: #888; margin-top: 4px; }
+        .result-card { background: white; border-left: 10px solid #4caf50; border-radius: 15px; }
+        .badge-info { background: #f3e5f5; color: #7b1fa2; font-weight: normal; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bold" style="color: var(--primary-pink);">AI HEALTH ADVISOR <span class="header-icon">🌸</span></h1>
+                    <p class="text-muted">Hệ thống dự báo Sức khỏe tâm lý & Chất lượng cuộc sống </p>
+                </div>
+
+                <div id="section-step1">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h4 class="mb-0 fw-bold">Thông tin định danh & Nhân khẩu học</h4>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-cake-candles me-2"></i>Độ tuổi</label>
+                            <input type="number" id="Age" class="form-control" placeholder="Ví dụ: 52">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-weight-scale me-2"></i>Chỉ số BMI</label>
+                            <input type="number" step="0.1" id="BMI" class="form-control" placeholder="Ví dụ: 22.5">
+                            <div class="instruction">Tự động tính: Cân nặng / (Chiều cao)²</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-person-half-dress me-2"></i>Trạng thái mãn kinh</label>
+                            <select id="Meno_Status" class="form-select">
+                                <option value="0">Tiền mãn kinh / Chưa mãn kinh</option>
+                                <option value="1">Đã mãn kinh hoàn toàn</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-clock-rotate-left me-2"></i>Số năm đã mãn kinh</label>
+                            <input type="number" id="Meno_Duration_New" class="form-control" value="0">
+                            <div class="instruction">Nếu chưa mãn kinh, hãy để là 0</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-user-graduate me-2"></i>Trình độ học vấn</label>
+                            <select id="Education_Code" class="form-select">
+                                <option value="0">Không đi học</option>
+                                <option value="1">Tiểu học</option>
+                                <option value="2">THCS</option>
+                                <option value="3">THPT - Trung cấp</option>
+                                <option value="4" selected>Đại học - Cao đẳng</option>
+                                <option value="5">Trên đại học</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-wallet me-2"></i>Mức thu nhập</label>
+                            <select id="Income_Code" class="form-select">
+                                <option value="1">Dưới 5 triệu</option>
+                                <option value="2">Từ 5 đến 10 triệu</option>
+                                <option value="3" selected>Trên 10 triệu</option>
+                                <option value="4">Trên 20 triệu</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-briefcase me-2"></i>Nghề nghiệp hiện tại</label>
+                            <select id="Job_Code" class="form-select">
+                                <option value="1">Nội trợ</option>
+                                <option value="2">Công nhân</option>
+                                <option value="3">Nhân viên văn phòng</option>
+                                <option value="4">Kinh doanh</option>
+                                <option value="5">Hưu trí</option>
+                                <option value="0">Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-heart me-2"></i>Tình trạng hôn nhân</label>
+                            <select id="Marital_Code" class="form-select">
+                                <option value="1">Có gia đình</option>
+                                <option value="0">Độc thân / Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label"><i class="fa-solid fa-stethoscoper me-2"></i>Bệnh mãn tính</label>
+                            <select id="Chronic_Disease" class="form-select">
+                                <option value="0">Không có</option>
+                                <option value="1">Đang điều trị bệnh mãn tính</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button class="btn btn-predict" onclick="identify()">XÁC NHẬN & PHÂN TÍCH NHÓM 🚀</button>
+                    </div>
+                </div>
+
+                <div id="section-step2" class="d-none mt-5">
+                    <div class="step-header">
+                        <div class="step-number" style="background: #9c27b0;">2</div>
+                        <h4 class="mb-0 fw-bold">Khảo sát Triệu chứng Thích nghi</h4>
+                    </div>
+                    <div class="alert badge-info mb-4">
+                        <i class="fa-solid fa-circle-info me-2"></i>AI đã lọc ra các câu hỏi quan trọng nhất dựa trên nhóm của bạn. Vui lòng đánh giá theo thang điểm yêu cầu.
+                    </div>
+
+                    <div class="row g-4" id="questions-area">
+                        </div>
+
+                    <div class="text-center mt-5">
+                        <button class="btn btn-predict" style="background: #9c27b0;" onclick="finalPredict()">XEM KẾT QUẢ CHẨN ĐOÁN 📊</button>
+                    </div>
+                </div>
+
+                <div id="section-result" class="d-none mt-5">
+                    <div class="result-card p-4 shadow-sm">
+                        <h4 class="fw-bold text-success mb-4"><i class="fa-solid fa-square-poll-vertical me-2"></i>KẾT QUẢ DỰ BÁO TỪ AI</h4>
+                        <div class="row text-center">
+                            <div class="col-md-6 border-end">
+                                <p class="text-muted mb-1">Mức độ Căng thẳng (PSS)</p>
+                                <h1 id="res-pss" class="display-4 fw-bold">--</h1>
+                                <span class="badge rounded-pill bg-light text-dark border">Thang điểm 0-40</span>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="text-muted mb-1">Chất lượng cuộc sống (MENQOL)</p>
+                                <h1 id="res-men" class="display-4 fw-bold">--</h1>
+                                <span class="badge rounded-pill bg-light text-dark border">Thang điểm 1-6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const QUESTION_MAP = {
+    'PSS_1': 'Bạn có cảm thấy khó khăn khi đối mặt với những vấn đề dồn dập?',
+    'PSS_2': 'Bạn có cảm thấy mất kiểm soát đối với những việc quan trọng?',
+    'PSS_3': 'Bạn có cảm thấy căng thẳng và lo lắng?',
+    'PSS_4': 'Bạn tự tin vào khả năng xử lý các vấn đề cá nhân?',
+    'PSS_5': 'Mọi việc đang diễn ra theo ý muốn của bạn?',
+    'PSS_6': 'Bạn cảm thấy không thể làm hết các việc cần làm?',
+    'PSS_10': 'Khó khăn tích tụ vượt mức bạn có thể giải quyết?',
+    'MEN_HotFlash': 'Mức độ bốc hỏa, nóng bừng mặt của bạn?',
+    'MEN_Memory': 'Mức độ giảm trí nhớ, hay quên?',
+    'MEN_Sleep': 'Mức độ mất ngủ hoặc khó ngủ?',
+    'MEN_Depressed': 'Cảm thấy lo âu hoặc trầm cảm?',
+    'MEN_Impatient': 'Cảm thấy mất kiên nhẫn, dễ cáu gắt?',
+    'MEN_Fatigue': 'Cảm thấy mệt mỏi, thiếu năng lượng?',
+    'MEN_Libido': 'Thay đổi ham muốn tình dục?',
+    'MEN_Weight': 'Tăng cân nhanh chóng?',
+    'Supp_Calcium': 'Sử dụng Canxi?',
+    'Supp_Omega3': 'Sử dụng Omega-3?'
+};
+
+const DEMO_FIELDS = ['Age', 'BMI', 'Education_Code', 'Income_Code', 'Job_Code', 'Marital_Code', 'Meno_Duration_New', 'Meno_Status', 'Chronic_Disease'];
+
+let clusterId = null;
+let savedDemo = {};
+
+async function identify() {
+    savedDemo = {};
+    DEMO_FIELDS.forEach(f => savedDemo[f] = document.getElementById(f).value);
+
+    const res = await fetch('/get_cluster', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(savedDemo)
+    });
+    const data = await res.json();
+    clusterId = data.cluster;
+
+    const area = document.getElementById('questions-area');
+    area.innerHTML = '';
+    data.questions.forEach(q => {
+        const label = QUESTION_MAP[q] || q;
+        const isPSS = q.startsWith('PSS');
+        const hint = isPSS ? '0: Không bao giờ -> 4: Luôn luôn' : '1: Không triệu chứng -> 6: Rất nặng';
+        area.innerHTML += `
+            <div class="col-md-6">
+                <label class="form-label">${label}</label>
+                <input type="number" class="form-control gold-q" data-id="${q}" placeholder="${hint}">
+            </div>`;
+    });
+    document.getElementById('section-step2').classList.remove('d-none');
+    window.scrollTo({top: document.getElementById('section-step2').offsetTop - 50, behavior: 'smooth'});
+}
+
+async function finalPredict() {
+    let fullData = {...savedDemo};
+    document.querySelectorAll('.gold-q').forEach(el => fullData[el.dataset.id] = el.value);
+
+    const res = await fetch('/predict', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({cluster: clusterId, full_data: fullData})
+    });
+    const result = await res.json();
+
+    document.getElementById('section-result').classList.remove('d-none');
+    document.getElementById('res-pss').innerText = result.PSS;
+    document.getElementById('res-men').innerText = result.MEN;
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

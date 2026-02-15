@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# IDE (PyCharm)
+.idea/
+
+# Data & Models (Tùy chọn: Nếu file .pkl hoặc .csv quá lớn >100MB)
+*.pkl
+*.csv
+reports/
