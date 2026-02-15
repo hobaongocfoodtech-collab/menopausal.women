@@ -1,8 +1,10 @@
+
+
 ---
 
 # 🌸 Adaptive AI: Menopause Health & Quality of Life Advisor 🌸
 
-## 🎯 Đề Tài Luận Án Thạc Sĩ
+## 🎯 Đề Tài Luận Án 
 
 > **"MỐI LIÊN HỆ CỦA GIAI ĐOẠN MÃN KINH ĐẾN MỨC ĐỘ CĂNG THẲNG VÀ CHẤT LƯỢNG CUỘC SỐNG CỦA PHỤ NỮ TỪ 45 ĐẾN 65 TUỔI TẠI THÀNH PHỐ HỒ CHÍ MINH"**
 
